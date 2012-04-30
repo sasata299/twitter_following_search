@@ -4,7 +4,7 @@ class TopController < ApplicationController
   def index
     if request.post?
       if params[:urls].blank?
-        @error = 'URLを指定してください'
+        @error = 'Please specify urls'
         render :index
         return
       end

@@ -3,4 +3,5 @@
 
 = form_tag do
   = text_area_tag :urls, params[:urls], :cols => 40, :rows => 12
+  = hidden_field_tag :token, ENV['AUTHENTICATION_TOKEN']
   = submit_tag '検索する'
