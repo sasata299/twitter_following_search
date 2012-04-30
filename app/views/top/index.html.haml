@@ -1,0 +1,6 @@
+- if @error
+  %div{:style => "color:red"}= @error
+
+= form_tag do
+  = text_area_tag :urls, params[:urls], :cols => 40, :rows => 12
+  = submit_tag '検索する'
