@@ -30,7 +30,7 @@ class TopController < ApplicationController
         end
       end
 
-      output(user_info)
+      output(user_info.select{|name, count| count > 1})
     end
   end
 
@@ -40,8 +40,7 @@ class TopController < ApplicationController
     book = Spreadsheet::Workbook.new
     sheet = book.create_worksheet
 
-    user_info.sort{|a,b| b[1] <=> a[1]}.each_with_index do |user,i|
-      break if i >= 100
+    user_info.sort{|a,b| b[1] <=> a[1]}[0..99].each_with_index do |user,i|
       user[2] = "https://twitter.com/#!/#{user[0]}"
       sheet.row(i).concat user
     end
