@@ -9,5 +9,5 @@ gem 'pry', '0.9.8.4'
 gem 'whenever', :require => false
 
 group :production do
-  gem 'unicorn'
+  gem 'unicorn', '4.1.1'
 end

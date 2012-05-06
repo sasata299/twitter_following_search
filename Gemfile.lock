@@ -116,5 +116,5 @@ DEPENDENCIES
   rails (= 3.0.10)
   spreadsheet (= 0.6.5.5)
   twitter (= 2.2.5)
-  unicorn
+  unicorn (= 4.1.1)
   whenever
