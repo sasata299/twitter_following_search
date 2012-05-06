@@ -1,10 +1,10 @@
 class User < ActiveRecord::Base
   class << self
     def set_screen_name
-      User.where("screen_name IS NULL").limit(300).each_with_index do |user,i|
+      User.where("profile IS NULL").limit(300).each_with_index do |user,i|
         begin
-          screen_name = Twitter.user(user.user_id).screen_name
-          user.update_attributes!(:screen_name => screen_name)
+          obj = Twitter.user(user.user_id)
+          user.update_attributes!(:profile => obj.description.strip, :url => obj.url)
         rescue Twitter::Error::NotFound
           user.destroy
         rescue Twitter::Error::BadRequest

@@ -16,9 +16,12 @@ class TopController < ApplicationController
           Twitter.friend_ids($1).ids.each do |user_id|
             unless user = User.find_by_user_id(user_id)
               begin
+                obj = Twitter.user(user_id)
                 user = User.create!(
                   :user_id => user_id,
-                  :screen_name => Twitter.user(user_id).screen_name
+                  :screen_name => obj.screen_name,
+                  :profile => obj.description.strip,
+                  :url => obj.url
                 )
               rescue
                 next
