@@ -7,3 +7,7 @@ gem 'twitter', '2.2.5'
 gem 'spreadsheet', '0.6.5.5'
 gem 'pry', '0.9.8.4'
 gem 'whenever', :require => false
+
+group :production do
+  gem 'unicorn'
+end
