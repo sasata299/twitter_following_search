@@ -14,26 +14,12 @@ class TopController < ApplicationController
       params[:urls].split(/\r?\n/).each do |url|
         if url =~ %r[https://twitter\.com/#!/(.+)]
           Twitter.friend_ids($1).ids.each do |user_id|
-            unless user = User.find_by_user_id(user_id)
-              begin
-                obj = Twitter.user(user_id)
-                user = User.create!(
-                  :user_id => user_id,
-                  :screen_name => obj.screen_name,
-                  :profile => obj.description.strip,
-                  :url => obj.url
-                )
-              rescue
-                next
-              end
-            end
-
-            user_info[user.screen_name] += 1 if user.screen_name
+            user_info[user_id] += 1
           end
         end
       end
 
-      output(user_info.select{|name, count| count > 1})
+      output(user_info.select{|user_id, count| count > 1})
     end
   end
 
@@ -43,9 +29,23 @@ class TopController < ApplicationController
     book = Spreadsheet::Workbook.new
     sheet = book.create_worksheet
 
-    user_info.sort{|a,b| b[1] <=> a[1]}[0..99].each_with_index do |user,i|
-      user[2] = "https://twitter.com/#!/#{user[0]}"
-      sheet.row(i).concat user
+    user_info.sort{|a,b| b[1] <=> a[1]}[0..99].each_with_index do |u,i|
+      unless user = User.find_by_user_id(u[0])
+        begin
+          obj = Twitter.user(u[0])
+          user = User.create!(
+            :user_id => u[0],
+            :screen_name => obj.screen_name,
+            :profile => obj.description.strip,
+            :url => obj.url
+          )
+        rescue
+          next
+        end
+      end
+
+      user_list = [user.screen_name, u[1], "https://twitter.com/#!/#{user.screen_name}"]
+      sheet.row(i).concat user_list
     end
 
     tmpfile = Tempfile.new ['result', '.xls']
