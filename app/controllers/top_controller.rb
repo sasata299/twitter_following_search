@@ -26,6 +26,8 @@ class TopController < ApplicationController
   private
 
   def output(user_info)
+    #Spreadsheet.client_encoding = 'cp932'
+
     book = Spreadsheet::Workbook.new
     sheet = book.create_worksheet
 
@@ -44,8 +46,8 @@ class TopController < ApplicationController
         end
       end
 
-      user_list = [user.screen_name, u[1], "https://twitter.com/#!/#{user.screen_name}"]
-      sheet.row(i).concat user_list
+      #profile = NKF.nkf('-s -m0', user.profile)
+      sheet.row(i).concat [user.screen_name, u[1], user.profile, user.url]
     end
 
     tmpfile = Tempfile.new ['result', '.xls']
